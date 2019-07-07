@@ -200,6 +200,13 @@ class UserListFragment : Fragment() {
     }
 
     private fun onUserCliked(userEntity: UserEntity) {
-        navigator.openUserDetail(this.activity!!, userEntity, REQUEST_USER)
+        if (!isFavorite!!) {
+            navigator.openUserDetail(this.activity!!, userEntity, REQUEST_USER)
+        }
+    }
+
+    fun submmitNewUserEntity(userEntity: UserEntity) {
+        val listOnUser = mutableListOf(userEntity)
+        onUserListLoaded(listOnUser)
     }
 }

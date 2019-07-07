@@ -222,5 +222,6 @@ class UserDetailActivity: AppCompatActivity() {
         setResult(Activity.RESULT_OK, Intent().apply {
             this.putExtra(SELECTED_USER_RESULT, userEntity)
         })
+        super.finish()
     }
 }

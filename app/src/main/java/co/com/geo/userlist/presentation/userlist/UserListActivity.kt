@@ -15,6 +15,7 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
@@ -53,6 +54,8 @@ class UserListActivity : AppCompatActivity() {
     var mToolbar: Toolbar? = null
     var mNewsAdapter: ArrayAdapter<String>? = null
 
+    var mFavoriteUsersFragment: UserListFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
@@ -87,9 +90,9 @@ class UserListActivity : AppCompatActivity() {
         }
 
         if (supportFragmentManager.findFragmentById(R.id.favorite_users_fragment) == null) {
-            val allUsersFragment = UserListFragment.newInstance(true)
+             mFavoriteUsersFragment = UserListFragment.newInstance(true)
             supportFragmentManager.beginTransaction()
-                .add(R.id.favorite_users_fragment, allUsersFragment)
+                .add(R.id.favorite_users_fragment, mFavoriteUsersFragment)
                 .commit()
         }
     }
@@ -130,9 +133,16 @@ class UserListActivity : AppCompatActivity() {
             REQUEST_USER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val receivedUser = data?.getParcelableExtra<UserEntity>(SELECTED_USER_RESULT)
+                    receivedUser?.let {
+                        if (it.favorite) {
+                            mFavoriteUsersFragment?.let {
+                               it.submmitNewUserEntity(receivedUser)
+                            }
 
+                        }
+                    }
                 }
-            }gi
+            }
         }
     }
 
@@ -202,7 +212,7 @@ class UserListActivity : AppCompatActivity() {
                 createCircularReveal.addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         super.onAnimationEnd(animation)
-                        mToolbar?.setBackgroundColor(getThemeColor(this as Context, R.attr.colorPrimary))
+                        mToolbar?.setBackgroundColor(getThemeColor(toolbar.context, R.attr.colorPrimary))
                     }
                 })
                 createCircularReveal.start()
@@ -219,7 +229,7 @@ class UserListActivity : AppCompatActivity() {
                     }
 
                     override fun onAnimationEnd(animation: Animation) {
-                        mToolbar?.setBackgroundColor(getThemeColor(this as Context, R.attr.colorPrimary))
+                        mToolbar?.setBackgroundColor(getThemeColor(toolbar.context, R.attr.colorPrimary))
                     }
 
                     override fun onAnimationRepeat(animation: Animation) {
@@ -273,7 +283,7 @@ class UserListActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String) : Boolean {
-                val alertDialog = AlertDialog.Builder(this as Context).create()
+                val alertDialog = AlertDialog.Builder(toolbar.context).create()
                 alertDialog.setMessage("Search keyword is " + query)
                 alertDialog.show()
                 return false
