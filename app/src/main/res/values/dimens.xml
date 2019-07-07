@@ -3,4 +3,6 @@
     <dimen name="item_list_horizontal_margin">4dp</dimen>
     <dimen name="zero">0dp</dimen>
     <dimen name="favorite_border_padding">3dp</dimen>
+    <dimen name="card_item_margin">2dp</dimen>
+    <dimen name="card_item_elevation">2dp</dimen>
 </resources>
